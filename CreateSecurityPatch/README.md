@@ -1,4 +1,4 @@
-# Patch Generator Script - Version 0.5 Alpha
+# Unable Unattended Patching - Version 0.5 Alpha
 
 This  Shell script automates the deployment of unattended-upgrades in your development
 environment. It includes automated fetching and updating of unattended upgrades, and additionally generates logs of all
