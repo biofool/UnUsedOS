@@ -1,0 +1,4 @@
+path|creation_time|access_time
+/usr/bin/foo|2023-01-01|2023-06-15
+/usr/lib/bar|2023-02-01|2022-03-01
+/usr/share/baz|2023-01-15|2024-01-01

@@ -1,0 +1,7 @@
+bloated-scs-full_5.4.1p08_precise_amd64/repo/pool/main/n/net-snmp/libsnmp15_5.4.3~dfsg-2.4ubuntu1_amd64.deb
+bloated-scs-full_5.4.1p08_precise_amd64/repo/pool/main/n/net-snmp/snmpd_5.4.3~dfsg-2.4ubuntu1_amd64.deb
+bloated-scs-full_5.4.1p08_precise_amd64/repo/pool/multiverse/s/snmp-mibs-downloader/snmp-mibs-downloader_1.1_all.deb
+bloated-scs-full_5.4.1p08_precise_amd64/repo/pool/non-free/f/facs-base/facs-base_5.4.1p08-1_all.deb
+bloated-scs-full_5.4.1p08_precise_amd64/repo/pool/non-free/v/bloated-report/bloated-report_5.4.1p08-1_all.deb
+bloated-scs-full_5.4.1p08_precise_amd64/repo/pool/non-free/v/bloated-snmp/bloated-snmp_5.4.1p08-1_all.deb
+bloated-scs-full_5.4.1p08_precise_amd64/repo/pool/universe/libs/libsmi/smistrip_0.4.8+dfsg2-4build1_all.deb
