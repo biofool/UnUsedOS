@@ -1,21 +1,99 @@
-The Project’s Core Objective
-The primary goal was to identify which files and or packages had files that are not needed most of the time.
-Ask the file system
+# UnUsedOS
 
-Data Collection
-The project started with gathering two sets of data:
-1.	A comprehensive list of all files on the system, detailing their paths, creation, and access times.
-2.	A corresponding list mapping files to the packages they belong to.
-Data Processing: GPT Chose pandas
-Utilizing Python’s pandas library, the data sets were merged based on file paths. This step was crucial in aligning each file with its package, correlating access times in the process.
-Analysis: Identifying Least Accessed Packages
-The merged data was then grouped by package names, and for each package, the oldest access time of its files was determined. This provided a clear picture of which packages were least interacted with, indicating potential areas for security review.
-Reporting: Focused on Security Implications
-The final report listed packages sorted by the oldest access time of their files. This prioritization assists security practitioners in identifying packages that might require updates, patches, or even removal to maintain system integrity.
-Why This Matters for Security Practitioners
-•	Attack Surface Optimization: Removing or updating rarely used packages can reduce the system’s attack surface.
-•	Proactive Maintenance: Regular analysis of file access patterns enables a proactive approach to system security, allowing for timely interventions.
-Other approaches evaluated
-SELinux, auditd, eBPF and AppArmour:
-All of these systems perform real-time reporting and would create performance impacts as well as requiring substantial engineering to be sure to detect “all file utilization”.
-![image](https://github.com/vigilent/Security/assets/1031599/06ece6b1-f041-4dbc-92ef-8f9da6833e15)
+A Linux system analysis toolkit for identifying unused files and packages on
+Supercomputing System (SCS) appliances, using filesystem access timestamps,
+package usage reports, and pandas-based data analysis.
+
+<!-- exec-summary: begin -->
+UnUsedOS analyzes Linux systems to find files and packages that are never
+accessed, helping reduce OS image bloat on SCS appliances. It combines shell
+scripts for file usage collection, Python scripts for package usage analysis,
+and Jupyter notebooks for interactive exploration — producing security patches
+that remove unused components.
+<!-- exec-summary: end -->
+
+## Prerequisites
+
+- Linux system (tested on Ubuntu Lucid/Precise/Xenial)
+- Python 3 with pandas
+- Standard Unix tools: `find`, `stat`, `dpkg`, `shar`, `csvkit`
+
+## Setup
+
+```bash
+git clone https://github.com/biofool/UnUsedOS.git
+cd UnUsedOS
+pip install pandas
+```
+
+## Usage
+
+### File usage report
+
+```bash
+# Generate a file access-time report for a directory tree
+bash FileUsageReport.sh /path/to/analyze
+```
+
+### Package usage analysis
+
+```bash
+# Basic package usage report
+python PackageUsageReport.py
+
+# Modified report with validation
+python ModifiedPackageUsageReportWithValidation.py
+```
+
+### Interactive analysis (Jupyter)
+
+```bash
+jupyter notebook UnusedFilesAndPackages.ipynb
+jupyter notebook UnusedPackageReport.ipynb
+jupyter notebook WhatsUnused.ipynb
+```
+
+### Security patch creation
+
+```bash
+bash CreateSecurityPatch/CreateSecurityPatchBundle.sh
+bash CreateSecurityPatch/SecurityPatchInstaller.sh
+```
+
+### Stats collection
+
+```bash
+bash StatsCollector/installVMCollector.sh
+bash StatsCollector/BloatedStatsCollectorInc.sh
+```
+
+## Project Structure
+
+```
+UnUsedOS/
+├── UnusedFilesAndPackages.py          # Main analysis script
+├── UnusedFilesAndPackages.ipynb       # Interactive notebook (v1)
+├── UnusedFilesAndPackages-V2.ipynb    # Interactive notebook (v2)
+├── UnusedPackageReport.py             # Package usage report
+├── UnusedPackageReport.ipynb          # Package report notebook
+├── WhatsUnused.ipynb                  # Survey notebook
+├── WhatsUnusedSurvey.py               # Survey script
+├── PackageUsageReport.py              # Basic package report
+├── ModifiedPackageUsageReport.py      # Modified package report
+├── ModifiedPackageUsageReportWithValidation.py  # With validation
+├── access_times.py                    # Access time utilities
+├── DescribeDataFrames.py              # DataFrame structure inspector
+├── FileUsageReport.sh                 # File usage shell report
+├── ConCSV2PSV.sh                      # CSV to PSV converter
+├── MakeShar.sh                        # Create shar archive
+├── AccessValidate/                    # Access validation tools
+├── CreateSecurityPatch/               # Security patch creation
+├── Dictionaries/                      # Data dictionaries
+├── StatsCollector/                    # VM stats collection
+├── bloated-scs-full_*.txt             # SCS package file lists (various versions)
+└── allpackages.txt                    # All packages reference
+```
+
+## License
+
+See repository metadata for license details.

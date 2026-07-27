@@ -1,9 +1,0 @@
-bloated-scs-full_6.7.8r02_precise_amd64/repo/pool/main/n/net-snmp/libsnmp15_5.4.3~dfsg-2.4ubuntu1_amd64.deb
-bloated-scs-full_6.7.8r02_precise_amd64/repo/pool/main/n/net-snmp/snmpd_5.4.3~dfsg-2.4ubuntu1_amd64.deb
-bloated-scs-full_6.7.8r02_precise_amd64/repo/pool/multiverse/s/snmp-mibs-downloader/snmp-mibs-downloader_1.1_all.deb
-bloated-scs-full_6.7.8r02_precise_amd64/repo/pool/non-free/f/facs-base/facs-base_6.7.8r02-1_all.deb
-bloated-scs-full_6.7.8r02_precise_amd64/repo/pool/non-free/v/bloated-report/bloated-report_6.7.8r02-1_all.deb
-bloated-scs-full_6.7.8r02_precise_amd64/repo/pool/non-free/v/bloated-snmp/bloated-snmp_6.7.8r02-1_all.deb
-bloated-scs-full_6.7.8r02_precise_amd64/repo/pool/non-free/v/bloated-vpy/bloated-vpy_6.7.8r02-1_amd64.deb
-bloated-scs-full_6.7.8r02_precise_amd64/repo/pool/universe/libs/libsmi/smistrip_0.4.8+dfsg2-4build1_all.deb
-bloated-scs-full_6.7.8r02_precise_amd64/repo/pool/universe/p/python-kinterbasdb/python-kinterbasdb_3.3.0-3_amd64.deb

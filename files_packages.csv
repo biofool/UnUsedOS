@@ -1,4 +1,0 @@
-path,package
-/usr/bin/foo,pkg-a
-/usr/lib/bar,pkg-b
-/usr/share/baz,pkg-a
