@@ -1,0 +1,52 @@
+# Test & Validation Routing — single source of truth for validation commands.
+# Evidence: NO tests, package manifests, Makefiles, or CI configs exist on main.
+# All entries are UNKNOWN. No command is listed unless it exists in repository
+# evidence; none do on main.
+
+target: documentation/main
+unit: []
+integration: []
+e2e: []
+contract: []
+architecture: []
+security: []
+static_analysis: []
+typecheck: []
+build: []
+lint: []
+additional:
+  - "UNKNOWN: no validation commands exist on main. main is documentation-only."
+  - "If working on origin/Public, re-derive available commands from that branch's manifests (none observed in file listing either)."
+
+target: file-usage-analysis
+unit: []
+integration: []
+typecheck: []
+lint: []
+additional:
+  - "UNKNOWN: no tests or tool configs on main or inferred on origin/Public."
+
+target: package-usage-analysis
+unit: []
+integration: []
+typecheck: []
+lint: []
+additional:
+  - "UNKNOWN: no tests or tool configs on main or inferred on origin/Public."
+
+target: security-patch-pipeline
+unit: []
+integration: []
+typecheck: []
+lint: []
+additional:
+  - "UNKNOWN: no tests. Manual validation only: test on a disposable VM; this workflow is destructive."
+  - "INFERRED sanity check (not a repo command): bash -n CreateSecurityPatchBundle.sh (syntax check) — command not present in repo evidence, do not assume."
+
+target: stats-collector
+unit: []
+integration: []
+typecheck: []
+lint: []
+additional:
+  - "UNKNOWN: no tests. StatsCollector/VMStatsDisplay/test_vmstat_disp.sh exists on origin/Public but is not a standard test runner target."

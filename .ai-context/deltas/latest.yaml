@@ -1,0 +1,20 @@
+from_revision: null
+to_revision: d2e849327a94a41153dede6b82854484413cce9a
+
+added:
+  - ".ai-context/ (initial creation — all artifacts new)"
+  - "prompt-c-repository-context-compiler.md (prompt file copied to repo root)"
+changed: []
+invalidated: []
+conflicts:
+  - CONFLICT-001 (README describes code absent on main; lives on origin/Public)
+  - CONFLICT-002 (bloated-scs-full_*.txt vs vems-scs-full_*.txt naming)
+reverified: []
+unknowns_added:
+  - UNK-001 (main vs origin/Public split intent)
+  - UNK-002 (data file naming)
+  - UNK-003 (license)
+  - UNK-004 (tests)
+  - UNK-005 (dependency versions)
+  - UNK-006 (patch script production use)
+unknowns_resolved: []

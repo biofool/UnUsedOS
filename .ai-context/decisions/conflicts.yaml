@@ -1,0 +1,56 @@
+# Recorded contradictions between sources. Neither side is silently rewritten.
+
+- id: CONFLICT-001
+  summary: >-
+    README on main describes a full project structure (Python scripts, shell
+    scripts, notebooks, directories, data files) that does not exist on the
+    main branch. The described implementation lives on origin/Public.
+  declared_claim:
+    statement: >-
+      The repository contains UnusedFilesAndPackages.py, FileUsageReport.sh,
+      CreateSecurityPatch/, StatsCollector/, AccessValidate/, Dictionaries/,
+      notebooks, and bloated-scs-full_*.txt data files.
+    source: README.md (Project Structure section)
+    evidence_type: README
+  observed_behavior:
+    statement: >-
+      main contains only README.md and TechnicalMarketingReadMe.md
+      (git ls-files on main returns 2 files). No application code, data, or
+      subdirectories exist on main.
+    source: git ls-files (main branch)
+    evidence_type: code
+  resolution: UNKNOWN
+  resolution_evidence: >-
+    No ADR, commit message, or doc on main explains the split. origin/Public
+    holds the described files. Intent (pending merge vs intentional split vs
+    abandoned migration) is UNKNOWN.
+  impact_if_agent_trusts_wrong_side: >-
+    An agent editing main believing the described files are present will fail
+    to locate them, or may create duplicate/divergent implementations. An agent
+    must check out origin/Public to edit the described code.
+
+- id: CONFLICT-002
+  summary: >-
+    main README references bloated-scs-full_*.txt data files, but origin/Public
+    contains vems-scs-full_*.txt files (VEMS naming). A VEMS->Bloated rename is
+    suggested by .claude/settings.local.json but not confirmed on main.
+  declared_claim:
+    statement: Data files are named bloated-scs-full_*.txt covering SCS 4.2.0–7.11.6.
+    source: README.md (Project Structure)
+    evidence_type: README
+  observed_behavior:
+    statement: >-
+      origin/Public contains vems-scs-full_*.txt files (e.g.
+      vems-scs-full_4.2.0p0_lucid_amd64.txt). No bloated-scs-full_*.txt files
+      exist on either branch.
+    source: git ls-tree -r --name-only origin/Public
+    evidence_type: code
+  resolution: UNKNOWN
+  resolution_evidence: >-
+    .claude/settings.local.json contains a pre-approved sed command replacing
+    VEMS with Bloated across .txt/.sh/.py/.csv/.md/.ipynb files, suggesting an
+    in-progress rename. No commit on main completes it. Not confirmed.
+  impact_if_agent_trusts_wrong_side: >-
+    An agent may search for bloated-scs-full_*.txt and find nothing, or
+    accidentally re-introduce VEMS naming inconsistent with the intended
+    direction. Verify the current naming convention on the working branch.

@@ -1,0 +1,47 @@
+# Unresolved Unknowns
+# Each entry: what is unknown, why it matters, cheapest verification.
+
+- id: UNK-001
+  unknown: Why main is documentation-only while origin/Public holds the implementation.
+  matters: >-
+    Determines whether an agent should edit main docs only, check out
+    origin/Public, or propose a merge. Misjudging causes wasted work or
+    divergence.
+  cheapest_verification: >-
+    Ask the maintainer; or inspect commit history/dates on both branches for a
+    merge/abandon signal (git log --all --graph --oneline).
+
+- id: UNK-002
+  unknown: Whether bloated-scs-full_*.txt (main README) == vems-scs-full_*.txt (origin/Public) post-rename.
+  matters: >-
+    An agent searching for data files by the README name will find nothing;
+    may re-introduce inconsistent naming.
+  cheapest_verification: >-
+    Diff a sample file between branches; confirm the .claude/settings.local.json
+    sed rename was applied on main (it was not — no .txt files on main).
+
+- id: UNK-003
+  unknown: License of the project.
+  matters: Legal reuse/contribution risk.
+  cheapest_verification: "Check GitHub repo metadata (About panel) or ask maintainer."
+
+- id: UNK-004
+  unknown: Whether any tests exist on origin/Public beyond the file listing.
+  matters: Cannot route validation; test-map is all UNKNOWN.
+  cheapest_verification: >-
+    Check out origin/Public and run find for test patterns; review for any
+    pytest/unittest config. (File listing showed none.)
+
+- id: UNK-005
+  unknown: Pinned dependency versions.
+  matters: Reproducibility and supply-chain safety.
+  cheapest_verification: >-
+    Check origin/Public for any requirements.txt/setup.py (none in listing);
+    ask maintainer; or capture pip freeze in a working venv.
+
+- id: UNK-006
+  unknown: Whether the security-patch scripts are used in any real deployment.
+  matters: >-
+    They are marked Alpha/dev-only; if used in production, the credential
+    block and temp-file risks are live.
+  cheapest_verification: Ask maintainer; review any deployment runbooks (none found).

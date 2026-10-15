@@ -1,0 +1,136 @@
+# Change-impact relationships. Evidence: DECLARED in README / INFERRED from origin/Public.
+# Dependency kinds: code | runtime | data | configuration | interface | operational
+# Validation commands live ONLY in testing/test-map.yaml (referenced via test_map_target).
+
+- component:
+    name: file-usage-analysis
+    path: FileUsageReport.sh, access_times.py, ConCSV2PSV.sh, csv2psv.py
+  depends_on:
+    - {kind: runtime,  target: "sudo + coreutils find/stat on target host"}
+    - {kind: runtime,  target: "atime enabled on filesystem"}
+    - {kind: code,     target: pandas}
+  used_by:
+    - {kind: code,  target: UnusedFilesAndPackages.py (imports access_times)}
+    - {kind: data,  target: package-usage-analysis (consumes emitted CSV/PSV)}
+  interfaces:
+    - "access_times.read_csv_filter_convert(file_path, column_names, numeric_tail, delimiter) -> (DataFrame, non_convertible_count)"
+  data_stores:
+    - "/var/log/vems/{NoRead,Read}28Days_<host>.log"
+  configuration: []
+  runtime_workflows: [unused-file-detection]
+  decisions: []
+  known_risks:
+    - "sudo find / over entire filesystem; output logs contain full file paths (sensitive)"
+  security_sensitive: true
+  operationally_sensitive: true
+  before_modifying:
+    - "Confirm -printf format matches downstream column/delimiter expectations"
+    - "Check all callers of access_times.read_csv_filter_convert"
+  test_map_target: file-usage-analysis
+  evidence:
+    - "README.md (DECLARED project structure)"
+    - "origin/Public:FileUsageReport.sh (INFERRED)"
+    - "origin/Public:access_times.py (INFERRED)"
+
+- component:
+    name: package-usage-analysis
+    path: PackageUsageReport.py, ModifiedPackageUsageReport.py, ModifiedPackageUsageReportWithValidation.py, WhatsUnusedSurvey.py
+  depends_on:
+    - {kind: code,   target: pandas}
+    - {kind: code,   target: argparse (ModifiedPackageUsageReportWithValidation only)}
+    - {kind: data,   target: files_packages.csv (path,package)}
+    - {kind: data,   target: files_info.csv (path,creation_time,access_time; PSV)}
+    - {kind: data,   target: allpackages.txt, protected_packages.txt}
+  used_by:
+    - {kind: data,        target: security-patch-pipeline (informs removal decisions, human-in-the-loop)}
+    - {kind: interface,   target: notebooks (UnusedFilesAndPackages.ipynb, WhatsUnused.ipynb)}
+  interfaces:
+    - "ModifiedPackageUsageReportWithValidation.py -D/--directories <dirs...>"
+  data_stores: []
+  configuration: []
+  runtime_workflows: [unused-file-detection]
+  decisions: []
+  known_risks:
+    - "False positives can drive removal of needed packages"
+    - "Hardcoded input paths (e.g. insights-rand-1)"
+  security_sensitive: false
+  operationally_sensitive: false
+  before_modifying:
+    - "Preserve CSV vs PSV delimiter convention across producer/consumer"
+    - "Keep column names path/package and path/creation_time/access_time stable"
+  test_map_target: package-usage-analysis
+  evidence:
+    - "README.md (DECLARED)"
+    - "origin/Public:PackageUsageReport.py (INFERRED)"
+    - "origin/Public:ModifiedPackageUsageReportWithValidation.py (INFERRED)"
+
+- component:
+    name: security-patch-pipeline
+    path: CreateSecurityPatch/CreateSecurityPatchBundle.sh, CreateSecurityPatch/SecurityPatchInstaller.sh, CreateSecurityPatch/upgrade.conf
+  depends_on:
+    - {kind: runtime, target: unattended-upgrades, apt-get, dpkg}
+    - {kind: runtime, target: rsync, ssh, sudo}
+    - {kind: configuration, target: "/etc/apt/apt.conf.d/50unattended-upgrades (from upgrade.conf)"}
+    - {kind: data, target: "/var/cache/apt/archives/*.deb"}
+  used_by:
+    - {kind: operational, target: "target SCS appliance hosts (receive patch)"}
+  interfaces: []
+  data_stores:
+    - "/var/log/vems/patch_dir_<date>"
+    - "/var/tmp/$$.patchlist"
+  configuration:
+    - CreateSecurityPatch/upgrade.conf
+  runtime_workflows: [security-patch-creation]
+  decisions:
+    - "Version 0.5 Alpha; dev/patch-generator only, not production (DECLARED in CreateSecurityPatch/README.md)"
+  known_risks:
+    - "HIGH: remote root command execution via ssh + sudo dpkg -i"
+    - "Commented-out block creates user fc with password fcllc00 and NOPASSWD sudo"
+    - "Predictable temp file /var/tmp/$$.patchlist (symlink race)"
+    - "No rollback path after dpkg -i"
+    - "No .deb integrity verification beyond apt"
+  security_sensitive: true
+  operationally_sensitive: true
+  before_modifying:
+    - "Review bundle + installer scripts together (near-duplicate logic)"
+    - "Never uncomment the credential-creation block"
+    - "Confirm upgrade.conf matches target Ubuntu release apt config schema"
+    - "Test on a disposable VM; this workflow is destructive"
+  test_map_target: security-patch-pipeline
+  evidence:
+    - "README.md (DECLARED)"
+    - "origin/Public:CreateSecurityPatchBundle.sh (INFERRED)"
+    - "origin/Public:SecurityPatchInstaller.sh (INFERRED)"
+    - "origin/Public:CreateSecurityPatch/README.md (DECLARED)"
+
+- component:
+    name: stats-collector
+    path: StatsCollector/installVMCollector.sh, StatsCollector/VEMSStatsCollector.zsh, StatsCollector/VEMSStatsCollectorInc.sh, StatsCollector/VEMSFileUsageStats.sh, StatsCollector/Vagrantfile
+  depends_on:
+    - {kind: runtime, target: vmstat, logger, systemd, sudo}
+    - {kind: runtime, target: Vagrant (VM provisioning)}
+  used_by:
+    - {kind: data, target: "StatsCollector/VMStatsDisplay/ (dashboards/extractors)"}
+    - {kind: data, target: "analysis scripts (longitudinal usage data)"}
+  interfaces:
+    - "systemd service: vmstat-vs.service"
+    - "syslog tag: VEMS"
+  data_stores:
+    - "syslog (tag VEMS)"
+    - "StatsCollector/VMStatsDisplay/ extracted logs/plots"
+  configuration: []
+  runtime_workflows: []
+  decisions: []
+  known_risks:
+    - "Installs persistent systemd service (survives reboot)"
+    - "vmstat 10 runs indefinitely (continuous resource use)"
+  security_sensitive: false
+  operationally_sensitive: true
+  before_modifying:
+    - "Keep systemd service name consistent across install + display scripts"
+    - "Preserve VEMS syslog tag contract"
+  test_map_target: stats-collector
+  evidence:
+    - "README.md (DECLARED)"
+    - "origin/Public:StatsCollector/installVMCollector.sh (INFERRED)"
+    - "origin/Public:StatsCollector/ file listing (INFERRED)"

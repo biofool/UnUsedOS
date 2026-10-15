@@ -1,0 +1,149 @@
+repository_revision: d2e849327a94a41153dede6b82854484413cce9a
+analysis_timestamp: "2026-02-10T00:00:00Z"
+analyzer_version: prompt-c-v2
+
+pass_plan:
+  session_scope: >-
+    Full eight-stage analysis of the main branch. The main branch is
+    documentation-only (2 tracked files: README.md, TechnicalMarketingReadMe.md),
+    so the analysis is necessarily thin on code-side detail. The
+    origin/Public branch (282 files) holds the described implementation and
+    is referenced as INFERRED/DECLARED evidence only; it is NOT the analyzed
+    branch and its contents must not be treated as OBSERVED on main.
+  stages_executed:
+    - Stage 0 — Scope Budget and Pass Plan
+    - Stage 1 — Repository Discovery and Routing
+    - Stage 2 — Architecture Compilation (declarations + inferred from origin/Public)
+    - Stage 3 — Coding Pattern and Convention Extraction (inferred from origin/Public)
+    - Stage 4 — Runtime Workflow Mapping (inferred from origin/Public)
+    - Stage 5 — Dependency and Change-Impact Mapping
+    - Stage 6 — Test and Validation Routing
+    - Stage 7 — Quality and Technical-Debt Analysis
+    - Stage 8 — Context Publication
+  stages_deferred: []
+  components_in_scope:
+    - README.md (DECLARED architecture + project structure)
+    - TechnicalMarketingReadMe.md (DECLARED capabilities + limitations)
+    - origin/Public branch contents (INFERRED implementation reference)
+  components_deferred: []
+
+coverage:
+  analyzed_domains:
+    - documentation (README.md, TechnicalMarketingReadMe.md) — OBSERVED on main
+    - described application architecture — DECLARED in README, INFERRED from origin/Public
+  excluded_paths:
+    - .git/
+    - .claude/ (editor settings, not application code)
+  honest_statement: >-
+    The main branch contains NO application code, configuration, tests, or
+    infrastructure — only two Markdown documentation files. All architecture,
+    component, workflow, convention, and test descriptions below are DECLARED
+    in the README or INFERRED from the origin/Public branch (inspected
+    read-only via git show but NOT checked out). No OBSERVED runtime behavior
+    exists on main. A coding agent editing main can only edit documentation;
+    to edit the described implementation they must first check out
+    origin/Public (or merge it into main).
+
+commands_run:
+  - "git rev-parse --abbrev-ref HEAD  -> main"
+  - "git status --porcelain  -> clean"
+  - "git rev-parse HEAD  -> d2e849327a94a41153dede6b82854484413cce9a"
+  - "git ls-files  -> README.md, TechnicalMarketingReadMe.md (2 files)"
+  - "git branch -a  -> main, remotes/origin/Public, remotes/origin/main"
+  - "git ls-tree -r --name-only origin/Public  -> 282 files (the described implementation)"
+  - "git show origin/Public:<file>  -> read-only inspection of key scripts on Public branch"
+  - "git log --all --oneline  -> 6 commits across branches"
+
+commands_not_run:
+  - "No build/test/lint/typecheck commands run: no application code, package manifest, Makefile, or CI config exists on main."
+  - "No commands contacted production or mutated external systems."
+
+limitations:
+  - "main is documentation-only; no executable code to validate against."
+  - "origin/Public was inspected read-only for context enrichment; it is not the analyzed branch and its revision is not pinned here."
+  - "No package manifest (requirements.txt, setup.py, pyproject.toml) exists on main; dependencies (pandas, matplotlib, jupyter) are DECLARED in README only."
+  - "No tests exist on main; test-map entries are UNKNOWN."
+
+artifacts:
+  - path: .ai-context/index.md
+    source_paths: [README.md, TechnicalMarketingReadMe.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/quickstart.md
+    source_paths: [README.md, TechnicalMarketingReadMe.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/architecture/system-overview.md
+    source_paths: [README.md, TechnicalMarketingReadMe.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/architecture/backend.md
+    source_paths: [README.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/architecture/data.md
+    source_paths: [README.md, TechnicalMarketingReadMe.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/architecture/infrastructure.md
+    source_paths: [README.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/components/index.md
+    source_paths: [README.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/components/file-usage-analysis.md
+    source_paths: [README.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/components/package-usage-analysis.md
+    source_paths: [README.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/components/security-patch-pipeline.md
+    source_paths: [README.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/components/stats-collector.md
+    source_paths: [README.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/workflows/index.md
+    source_paths: [README.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/workflows/unused-file-detection.md
+    source_paths: [README.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/workflows/security-patch-creation.md
+    source_paths: [README.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/change-impact/relationships.yaml
+    source_paths: [README.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/conventions/coding-patterns.md
+    source_paths: [README.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/conventions/dependencies.md
+    source_paths: [README.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/conventions/configuration.md
+    source_paths: [README.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/conventions/observability.md
+    source_paths: [README.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/testing/test-map.yaml
+    source_paths: [README.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/decisions/architecture-decisions.md
+    source_paths: [README.md, TechnicalMarketingReadMe.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/decisions/conflicts.yaml
+    source_paths: [README.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/debt/register.yaml
+    source_paths: [README.md, TechnicalMarketingReadMe.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/unknowns/register.yaml
+    source_paths: [README.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+  - path: .ai-context/deltas/latest.yaml
+    source_paths: [README.md]
+    last_verified_revision: d2e849327a94a41153dede6b82854484413cce9a
+
+unresolved_unknowns:
+  - "Why does main contain only documentation while origin/Public holds the full implementation? Intent UNKNOWN (pending merge, intentional split, or abandoned migration)."
+  - "Are the bloated-scs-full_*.txt files referenced in the main README the same as the vems-scs-full_*.txt files on origin/Public (post VEMS->Bloated rename)? INFERRED yes via .claude/settings.local.json sed permission, but not confirmed on main."
+  - "No license file is present on main; README says 'See repository metadata for license details' — license UNKNOWN."
+
+prior_analyzed_revision: null

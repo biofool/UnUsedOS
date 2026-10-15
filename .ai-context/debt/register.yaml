@@ -1,0 +1,175 @@
+# Technical Debt Register. Sorted descending by score (impact x likelihood x reach).
+# Evidence: DECLARED in README/TechnicalMarketingReadMe; INFERRED from origin/Public.
+
+- id: DEBT-001
+  title: main branch is documentation-only; described implementation lives on origin/Public
+  category: organizational
+  status: open
+  affected_paths: [README.md, TechnicalMarketingReadMe.md]
+  evidence:
+    - "git ls-files on main -> 2 files (README.md, TechnicalMarketingReadMe.md)"
+    - "git ls-tree -r origin/Public -> 282 files"
+    - "README.md Project Structure section describes absent files"
+  cause: UNKNOWN
+  risk: >-
+    Agents and contributors editing main cannot find the described code. Risk
+    of divergent documentation, duplicate work, or accidental creation of a
+    second implementation. Blast radius: entire repository orientation.
+  priority:
+    impact: 4
+    likelihood: 5
+    reach: 5
+    score: 100
+    rationale: "Near-certain to confuse any new contributor; affects all work."
+  smallest_safe_fix: >-
+    Document the branch split explicitly in README (e.g. 'Implementation is on
+    the Public branch') or merge origin/Public into main.
+  remediation_notes: >-
+    Decide intent (merge vs split). If split, add a pointer in README. If merge,
+    merge origin/Public into main with review. Validate README accuracy after.
+  estimated_effort: S (note uncertainty: merge review could be M)
+  agent_suitability: true
+  human_review_required: true
+
+- id: DEBT-002
+  title: Commented-out credential/privilege-escalation block in security patch scripts
+  category: security
+  status: open
+  affected_paths: [CreateSecurityPatch/CreateSecurityPatchBundle.sh]
+  evidence:
+    - "origin/Public:CreateSecurityPatch/CreateSecurityPatchBundle.sh contains commented block: adduser fc, chpasswd fc:fcllc00, NOPASSWD sudo via sed on /etc/sudoers"
+  cause: UNKNOWN (leftover from setup automation?)
+  risk: >-
+    If uncommented, creates a passwordless-sudo user with a known password,
+    granting root on any host running the script. Blast radius: any host where
+    the bundle script runs.
+  priority:
+    impact: 5
+    likelihood: 2
+    reach: 4
+    score: 40
+    rationale: "Severe if enabled; currently commented so likelihood is lower."
+  smallest_safe_fix: "Delete the commented credential block entirely."
+  remediation_notes: "Remove the block; if setup automation is needed, externalize to a reviewed, secret-managed process."
+  estimated_effort: XS
+  agent_suitability: true
+  human_review_required: true
+
+- id: DEBT-003
+  title: Predictable temp file path in patch scripts (symlink race)
+  category: security
+  status: open
+  affected_paths: [CreateSecurityPatch/CreateSecurityPatchBundle.sh, CreateSecurityPatch/SecurityPatchInstaller.sh]
+  evidence:
+    - "Both scripts use /var/tmp/$$.patchlist"
+  cause: Use of PID-based temp filename without O_NOFOLLOW/mktemp.
+  risk: >-
+    A local attacker could symlink /var/tmp/$$.patchlist to a privileged
+    location, causing dpkg to read attacker-controlled content. Blast radius:
+    the patch-generator host (requires local non-root user).
+  priority:
+    impact: 4
+    likelihood: 2
+    reach: 3
+    score: 24
+    rationale: "Requires local access; mitigated by single-user patch generator."
+  smallest_safe_fix: "Use mktemp instead of /var/tmp/$$.patchlist."
+  remediation_notes: "Replace with $(mktemp); ensure cleanup in a trap."
+  estimated_effort: XS
+  agent_suitability: true
+  human_review_required: false
+
+- id: DEBT-004
+  title: No dependency manifest (requirements.txt / pyproject.toml)
+  category: dependency
+  status: open
+  affected_paths: [README.md]
+  evidence:
+    - "README says 'pip install pandas' but no requirements.txt on main or origin/Public"
+  cause: UNKNOWN
+  risk: >-
+    Dependency versions are unpinned; reproducibility and supply-chain review
+    are not possible. Blast radius: all Python analysis scripts.
+  priority:
+    impact: 3
+    likelihood: 4
+    reach: 4
+    score: 48
+    rationale: "Affects reproducibility broadly; likely to bite over time."
+  smallest_safe_fix: "Add requirements.txt pinning pandas, matplotlib, jupyter."
+  remediation_notes: "Generate from a clean venv; pin major.minor. Review on origin/Public."
+  estimated_effort: XS
+  agent_suitability: true
+  human_review_required: false
+
+- id: DEBT-005
+  title: No tests and no CI
+  category: test
+  status: open
+  affected_paths: [README.md]
+  evidence:
+    - "No test files on main; none in origin/Public file listing"
+    - "TechnicalMarketingReadMe: 'No automated CI'"
+  cause: UNKNOWN
+  risk: >-
+    Changes to analysis logic or patch scripts cannot be automatically
+    validated. Risk of silent regressions in unused-package detection or patch
+    generation. Blast radius: all components.
+  priority:
+    impact: 4
+    likelihood: 4
+    reach: 4
+    score: 64
+    rationale: "No safety net for a security-sensitive toolkit."
+  smallest_safe_fix: >-
+    Add smoke tests for access_times.read_csv_filter_convert and the package
+    merge logic using a small fixture CSV.
+  remediation_notes: "Start with unit tests for the pure pandas functions; add bash -n syntax checks for shell scripts."
+  estimated_effort: M
+  agent_suitability: true
+  human_review_required: false
+
+- id: DEBT-006
+  title: Hardcoded input paths in analysis scripts
+  category: code
+  status: open
+  affected_paths: [UnusedFilesAndPackages.py]
+  evidence:
+    - "origin/Public:UnusedFilesAndPackages.py: input_dir = 'insights-rand-1' hardcoded"
+  cause: Scripts written for a specific dataset.
+  risk: >-
+    Scripts fail or silently use wrong data when run against different input
+    directories. Blast radius: analysis reproducibility.
+  priority:
+    impact: 3
+    likelihood: 3
+    reach: 3
+    score: 27
+    rationale: "Nuisance-level; ModifiedPackageUsageReportWithValidation already uses argparse."
+  smallest_safe_fix: "Parameterize input_dir via argparse like the validation script does."
+  remediation_notes: "Align all analysis scripts on a common argparse interface."
+  estimated_effort: S
+  agent_suitability: true
+  human_review_required: false
+
+- id: DEBT-007
+  title: No license file
+  category: documentation
+  status: open
+  affected_paths: [README.md]
+  evidence:
+    - "README: 'See repository metadata for license details' — no LICENSE file on main"
+  cause: UNKNOWN
+  risk: >-
+    Legal ambiguity discourages contribution and reuse. Blast radius: project adoption.
+  priority:
+    impact: 3
+    likelihood: 3
+    reach: 5
+    score: 45
+    rationale: "Affects all potential users/contributors."
+  smallest_safe_fix: "Add a LICENSE file matching GitHub repo metadata."
+  remediation_notes: "Confirm intended license with maintainer; add LICENSE + license header convention."
+  estimated_effort: XS
+  agent_suitability: false
+  human_review_required: true
