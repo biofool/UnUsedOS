@@ -15,3 +15,6 @@ error.log
 **/*.tfstate
 **/*.tfstate.*
 **/verify_all.sh
+
+# Local analysis data (kept in Security monorepo, not published)
+*.csv
