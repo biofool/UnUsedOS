@@ -1,0 +1,51 @@
+# -*- mode: ruby -*-
+# UnusedOS fleet suite on Debian VMs.
+#
+# Usage:
+#   cd UnusedOS/vagrant
+#   vagrant up
+#   bash scripts/run-vagrant-fleet-suite.sh
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "debian/bookworm64"
+  config.vm.box_check_update = false
+
+  if Vagrant.has_plugin?("vagrant-vbguest")
+    config.vbguest.auto_update = false
+  end
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = 1024
+    vb.cpus = 1
+  end
+
+  config.vm.provider "libvirt" do |lv|
+    lv.memory = 1024
+    lv.cpus = 1
+  end
+
+  config.vm.synced_folder "..", "/opt/unusedos", type: "rsync", rsync__exclude: [
+    ".venv/", ".git/", "reports/", "vagrant/.vagrant/", "vagrant/archives/",
+    "**/__pycache__/", ".pytest_cache/", "terraform-test/", "terraform-test-kicksecure/",
+    "terraform-packer-runner/",
+  ]
+  config.vm.synced_folder "./archives", "/vagrant/archives", create: true
+
+  vm_defs = [
+    { name: "container-web",    ip: "192.168.56.10", packages: "curl",    use_cmd: "curl --version" },
+    { name: "container-api",    ip: "192.168.56.11", packages: "jq",      use_cmd: "jq --version" },
+    { name: "container-worker", ip: "192.168.56.12", packages: "dnsutils", use_cmd: "dig -v" },
+  ]
+
+  vm_defs.each do |vm|
+    config.vm.define vm[:name] do |node|
+      node.vm.hostname = vm[:name]
+      node.vm.network "private_network", ip: vm[:ip]
+      node.vm.provision "shell", name: "provision-debian", path: "scripts/provision-debian.sh", args: [
+        vm[:name],
+        vm[:packages],
+        vm[:use_cmd],
+      ]
+    end
+  end
+end

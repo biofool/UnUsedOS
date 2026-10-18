@@ -1,0 +1,10 @@
+project_id             = "project-135adecf-38fc-4e43-ae4"
+bucket_name            = "scraper-intl-deployments-239573"
+zone                   = "us-central1-a"
+machine_type           = "e2-small"
+boot_disk_size_gb      = 30
+boot_disk_image_name   = "kicksecure-cli-18-1-4-2"
+ssh_user               = "user"
+service_account_email  = "scraper-intl-sheets@project-135adecf-38fc-4e43-ae4.iam.gserviceaccount.com"
+gcs_deployments_prefix = "deployments/unusedos-test/latest"
+collect_paths          = "/usr/bin:/usr/lib"

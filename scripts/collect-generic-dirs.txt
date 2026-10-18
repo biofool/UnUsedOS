@@ -1,0 +1,55 @@
+# Shared directories where a single package owner must not claim every file underneath.
+# The collector still attributes files in a private subdirectory, such as
+# /var/log/nginx or /var/lib/<package>, when that directory belongs to one package.
+# One absolute path per line. Blank lines and lines starting with # are ignored.
+
+/
+/bin
+/boot
+/dev
+/etc
+/home
+/lib
+/lib32
+/lib64
+/lib/aarch64-linux-gnu
+/lib/arm-linux-gnueabihf
+/lib/i386-linux-gnu
+/lib/x86_64-linux-gnu
+/media
+/mnt
+/opt
+/proc
+/root
+/run
+/sbin
+/srv
+/sys
+/tmp
+/usr
+/usr/bin
+/usr/games
+/usr/include
+/usr/lib
+/usr/lib32
+/usr/lib64
+/usr/lib/aarch64-linux-gnu
+/usr/lib/arm-linux-gnueabihf
+/usr/lib/i386-linux-gnu
+/usr/lib/x86_64-linux-gnu
+/usr/local
+/usr/sbin
+/usr/share
+/usr/src
+/var
+/var/backups
+/var/cache
+/var/crash
+/var/lib
+/var/local
+/var/lock
+/var/log
+/var/mail
+/var/opt
+/var/spool
+/var/tmp

@@ -1,0 +1,7 @@
+project_id            = "project-135adecf-38fc-4e43-ae4"
+zone                  = "us-central1-a"
+region                = "us-central1"
+import_bucket         = "scraper-intl-deployments-239573"
+service_account_email = "scraper-intl-sheets@project-135adecf-38fc-4e43-ae4.iam.gserviceaccount.com"
+gcp_image_name        = "kicksecure-cli-18-1-4-2"
+kicksecure_version    = "18.1.4.2"
